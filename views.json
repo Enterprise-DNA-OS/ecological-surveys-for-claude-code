@@ -1,13 +1,35 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Ecological Surveys for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Ecological survey review",
+    "subtitle": "Internal snapshot. Fictional data until you import your own records.",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Review queue",
+        "sql": "select * from review_queue order by review_due,code"
+      },
+      {
+        "title": "Evidence and permission checks",
+        "sql": "select code,rule,finding from record_checks order by code,rule"
+      },
+      {
+        "title": "Field follow-ups",
+        "sql": "select * from actions_due order by due_on,code"
+      }
+    ]
+  },
+  {
+    "name": "species",
+    "title": "Species and survey effort",
+    "subtitle": "Internal evidence summary. Counts are observations, not population estimates.",
+    "sections": [
+      {
+        "title": "Species register",
+        "sql": "select * from species_register order by project,scientific_name"
+      },
+      {
+        "title": "Effort",
+        "sql": "select project,method,count(*)::int surveys,sum(effort_minutes)::int effort_minutes from survey_register group by project,method order by project,method"
       }
     ]
   }

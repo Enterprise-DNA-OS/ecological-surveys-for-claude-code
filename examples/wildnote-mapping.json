@@ -1,0 +1,20 @@
+{
+  "sheet": "Pivot Report",
+  "header_row": 1,
+  "columns": {
+    "code": "Survey ID",
+    "site": "Site",
+    "surveyed_on": "Survey Date",
+    "observer": "User",
+    "method": "Method",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "effort_minutes": "Effort minutes",
+    "evidence_ref": "Evidence archive",
+    "applicability_basis": "Permission assessment"
+  },
+  "defaults": {
+    "review_due": "2026-12-01",
+    "permit_required": false
+  }
+}

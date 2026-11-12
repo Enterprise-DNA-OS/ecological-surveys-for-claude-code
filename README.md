@@ -1,115 +1,91 @@
-<h1 align="center">Ecological Surveys for Claude Code</h1>
+# Ecological Surveys for Claude Code
 
-<p align="center">
-  <strong>The open-source ecological survey review desk that is just a database and Claude Code.</strong>
-</p>
+Field evidence, species observations and survey reviews in a database you own. MIT-licensed software from Enterprise DNA. Works with Claude Code, Codex, OpenCode or Cursor.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+| Do it yourself | We customise it | We run it for you |
+|---|---|---|
+| Free source code. Install and operate it. | Your forms, review rules, reports and Wildnote exports mapped across. [Get your version built](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_campaign=wildnote). | Installed and operated through Omni by Enterprise DNA. One setup fee, then a retainer. [Book a call](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_campaign=wildnote). |
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Wildnote data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=wildnote">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/wildnote?utm_source=github&utm_medium=readme&utm_campaign=wildnote">How it works</a></td>
-  </tr>
-</table>
+## What this replaces
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-wildnote">Instead of Wildnote</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
+The office work around ecological field surveys: assembling the evidence, checking what is missing, confirming identifications, following up site visits and producing review papers. Wildnote's [pricing page](https://www.wildnoteapp.com/pricing), checked 12 November 2026, lists a starting price of $675 per user per year, with a two-user minimum and custom rates. Its site also announces acquisition by Fulcrum. Confirm current terms for your team.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
-
----
-
-## What is this
-
-Ecological Surveys for Claude Code does the job you pay Wildnote for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Wildnote dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Wildnote per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=wildnote).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
+This free base keeps survey records and original imported answer fields, an observation register, permission references, actions, notes and revision-specific reviews. It does not reproduce the entire Wildnote mobile platform. Field collection, offline synchronisation, photo storage, maps and statutory form layouts are separate work to agree for your version. Independent software, not affiliated with Wildnote or Fulcrum.
 
 ## Quick start
 
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 22.13 or later. No server or account is needed for the demo.
 
 ```bash
 git clone https://github.com/Enterprise-DNA-OS/ecological-surveys-for-claude-code.git
 cd ecological-surveys-for-claude-code
 npm install
+npm test
 npm run demo
+npm run surveys -- review-queue
+npm run surveys -- compliance
+npm run view
+npm run docs
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+Without DATABASE_URL, PGlite persists locally under .data/db or DATA_DIR. With DATABASE_URL, the same migrations run on Postgres. Use npm run migrate for a new shared database. Demo data is fictional, includes expired permission evidence and overdue work, and seeds idempotently. A shared demo database requires an explicit --demo-database argument to scripts/seed.mjs. Never seed production.
 
-### Use it with your own Postgres or Supabase
+## Five weekly rituals
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+- /review-queue shows surveys awaiting a current review, with check counts and open work.
+- /permit-check checks recorded applicability, references, scope and date coverage.
+- /species-register groups observed counts by project, taxon, identification status and sensitivity.
+- /actions-due orders field follow-ups by date and owner.
+- /weekly-review creates one branded paper from the review queue, record checks and actions.
 
-## The commands
+A changed survey, observation or action increments the survey revision. Earlier reviews stay visible but no longer count as current. A review needs complete record checks, no open actions, evidence, and a different named person from the field observer. Permission applicability and scope are professional decisions, never inferred from a species name. Counts are observations, not population estimates or survey comparability claims.
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+## Commands and documents
 
-| Command | What it does |
-|---|---|
-| `/...` | ... |
+36 recipes live in .claude/commands. [CLI syntax](docs/cli.md). Use npm run surveys -- help for the command list and --json for complete values. Human output trims cells to 70 characters. Partial IDs, codes and case-insensitive names work, with ambiguity listed and exit code 1.
 
-## Instead of Wildnote
+npm run view renders private read-only week and species dashboards. npm run docs renders a survey evidence paper and field return brief per survey. brand.json controls business name, colours and logo. Draft commands write working papers to drafts and never send. Export writes all eight record collections as JSON, including source workbook bytes, mappings and full change history. Keep the original field photographs in your controlled archive; a reference does not copy the photo.
 
-<!-- TODO(author): how to bring data across from Wildnote; link docs/replace-wildnote.md -->
+## Ten questions to ask
 
-## Architecture
+These questions are answered by the current CLI. They are configurable local reviews, not claims that Wildnote cannot offer similar analysis.
 
-```
-ecological-surveys-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
-```
+1. Which surveys have changed since their last review? review-queue and review-history.
+2. Which permission references fail to cover the survey date? permit-check.
+3. Which field visits are missing coordinates, effort or evidence? evidence-gaps.
+4. Which species identifications still need confirmation? provisional-identifications.
+5. Which follow-ups are overdue, and who owns them? actions-due.
+6. Which project has observations marked sensitive? sensitive-records.
+7. Which taxa were observed on each project, by confirmation status? species-register.
+8. Which surveys are over thirty days old and still unreviewed? stale-surveys.
+9. How much recorded effort went into each survey method? survey-effort.
+10. Which original answers and source export supplied a survey? survey, imports and export.
 
-## Built for coding agents
+## Your first hour: ten things to ask for
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+1. Put our business name and colours in brand.json.
+2. Run the fictional Monday review.
+3. Open a survey paper and compare it with the record checks.
+4. Create our first project and name its owner.
+5. Inspect one Wildnote Pivot Report workbook and map its questions.
+6. Test the import before writing any records.
+7. Record our permission applicability assessment and evidence references.
+8. Add our observed species and mark sensitive records.
+9. Give missing evidence a named owner and due date.
+10. Ask /customise for our review rules, then /new-view for the report we need.
 
-## Contributing
+## Move your records
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+[Switching guide](docs/replace-wildnote.md). Wildnote documents Pivot Report Excel exports with one survey per row. This importer reads that shape with a reviewed mapping because form questions differ. It retains every source answer and the original workbook. Dynamic species questions remain in source fields until explicitly mapped into observations. No fabricated native format or vendor fixture is included.
 
-## Want it installed and run for you?
+## Record checks and access
 
-Enterprise DNA installs Ecological Surveys for Claude Code for your business, migrates your Wildnote data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+[Compliance sources and limits](docs/compliance.md). Checks support the responsible ecologist; they do not issue permits, establish legal compliance, identify species or certify a report. The built-in permission example is New Zealand marine reserve research. Other work and jurisdictions require their own assessed rules.
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=wildnote)
-- Read more: [enterprisedna.co/omni/instead-of/wildnote](https://enterprisedna.co/omni/instead-of/wildnote?utm_source=github&utm_medium=readme&utm_campaign=wildnote)
+Row security is enabled and PUBLIC access is revoked. This is a trusted-operator database, not a multi-tenant service. Actor labels are not authenticated identity. Database owners can change the schema and bypass application controls, so keep independent backups. Exports, source workbooks and generated HTML contain private records and sensitive locations. There is no automatic deletion or retention timer.
 
-## License
+## Verification
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+npm test uses a temporary PGlite database and covers migrations, seed idempotency, every CLI command, invalid dates, permission gaps, stale reviews, imports, duplicate prevention, exports and escaped HTML. GitHub Actions runs the same suite on Windows and Linux, plus disposable Postgres. To run the Postgres suite locally, set ECOLOGY_TEST_DATABASE_URL to an empty disposable database. Tests leave its records in place; drop that disposable database afterwards.
+
+[Why no front end](docs/why-no-front-end.md). Customise the database and commands, not a separate agent-specific codebase.

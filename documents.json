@@ -1,11 +1,58 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "survey-paper",
+    "title": "Draft survey evidence paper",
+    "for_each": "select id,code from surveys order by code",
+    "file": "code",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Survey record",
+        "layout": "record",
+        "sql": "select code,site,surveyed_on,observer,method,latitude,longitude,effort_minutes,evidence_ref,revision from surveys where id=$1"
+      },
+      {
+        "title": "Recorded observations",
+        "sql": "select code,scientific_name,count,identification,sensitive,evidence_ref from observations where survey_id=$1 order by code"
+      },
+      {
+        "title": "Checks requiring resolution",
+        "sql": "select rule,finding from record_checks where survey_id=$1"
+      },
+      {
+        "title": "Review history",
+        "sql": "select revision,reviewer,evidence,created_at from reviews where survey_id=$1 order by created_at"
+      },
+      {
+        "title": "Permission evidence",
+        "layout": "record",
+        "sql": "select permit_required,permit_ref,permit_from,permit_until,permit_scope,applicability_basis from surveys where id=$1"
+      },
+      {
+        "title": "Source fields",
+        "layout": "record",
+        "sql": "select source_fields from surveys where id=$1"
+      }
+    ]
+  },
+  {
+    "name": "field-return",
+    "title": "Draft field return brief",
+    "for_each": "select id,code from surveys order by code",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Site and method",
+        "layout": "record",
+        "sql": "select code,site,method,evidence_ref from surveys where id=$1"
+      },
+      {
+        "title": "Outstanding follow-ups",
+        "sql": "select code,description,owner,due_on from actions where survey_id=$1 and completed_at is null order by due_on"
+      },
+      {
+        "title": "Unresolved record checks",
+        "sql": "select rule,finding from record_checks where survey_id=$1"
+      }
     ]
   }
 ]
